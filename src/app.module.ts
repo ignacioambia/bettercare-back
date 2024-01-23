@@ -9,6 +9,7 @@ import 'dotenv/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(
       process.env.MONGO_DB_CONNECTION
     ),
