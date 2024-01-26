@@ -29,8 +29,8 @@ export class PatientController {
   }
 
   @Get()
-  findAll() {
-    return this.patientService.findAll();
+  getSpecialistPatients(@Req() req: Request) {
+    return this.patientService.getSpecialistPatients(req['user'].sub);
   }
 
   @Get(':id')

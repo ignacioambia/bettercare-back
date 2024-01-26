@@ -13,17 +13,17 @@ export class PatientService {
 
   async addPatientToSpecialist(
     createPatientDto: CreatePatientDto,
-    specialistId: string | Types.ObjectId,
+    specialistId: Types.ObjectId,
   ): Promise<Patient> {
     const createdPatient = new this.patientModel({
       ...createPatientDto,
-      specialistId: new Types.ObjectId(specialistId),
+      specialistId,
     });
     return createdPatient.save();
   }
 
-  findAll() {
-    return `This action returns all patient`;
+  async getSpecialistPatients(specialistId: Types.ObjectId) {
+    return this.patientModel.find({ specialistId });
   }
 
   findOne(id: number) {
