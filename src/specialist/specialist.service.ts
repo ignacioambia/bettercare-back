@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSpecialistDto } from './dto/create-specialist.dto';
 import { UpdateSpecialistDto } from './dto/update-specialist.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Specialist } from './specialist.schema';
+import { Model } from 'mongoose';
 
 export type Patient = any;
 
 @Injectable()
 export class SpecialistService {
+  constructor(@InjectModel(Specialist.name) private specialistModel: Model<Specialist>){}
+
   private readonly users = [
     {
       userId: 1,
@@ -24,7 +29,8 @@ export class SpecialistService {
   }
 
   create(createSpecialistDto: CreateSpecialistDto) {
-    return 'This action adds a new specialist';
+    const createdSpecialist = new this.specialistModel(createSpecialistDto);
+    return createdSpecialist.save();
   }
 
   findAll() {
