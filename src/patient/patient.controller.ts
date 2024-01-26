@@ -4,6 +4,7 @@ import {
   Post,
   Body,
   Patch,
+  Put,
   Param,
   Delete,
   Req,
@@ -12,6 +13,7 @@ import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Request } from 'express';
+import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
 
 @Controller('patient')
 export class PatientController {
@@ -26,6 +28,11 @@ export class PatientController {
       createPatientDto,
       req['user'].sub,
     );
+  }
+
+  @Put('medical-history/:patientId')
+  addMedicalHistory(@Param('patientId', MongoIdPipe) patientId: string){
+    return 'calling adding medical history' + patientId;
   }
 
   @Get()
