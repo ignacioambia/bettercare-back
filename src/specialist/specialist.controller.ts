@@ -10,11 +10,13 @@ import {
 import { SpecialistService } from './specialist.service';
 import { CreateSpecialistDto } from './dto/create-specialist.dto';
 import { UpdateSpecialistDto } from './dto/update-specialist.dto';
+import { Public } from 'src/decorators/public/public.decorator';
 
 @Controller('specialist')
 export class SpecialistController {
   constructor(private readonly specialistService: SpecialistService) {}
 
+  @Public()
   @Post()
   create(@Body() createSpecialistDto: CreateSpecialistDto) {
     return this.specialistService.create(createSpecialistDto);
@@ -25,10 +27,6 @@ export class SpecialistController {
     return this.specialistService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.specialistService.findOne(id);
-  }
 
   @Patch(':id')
   update(
