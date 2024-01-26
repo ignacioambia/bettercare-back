@@ -3,14 +3,22 @@ import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Patient } from './patient.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class PatientService {
-  constructor(@InjectModel(Patient.name) private patientModel: Model<Patient>) {}
+  constructor(
+    @InjectModel(Patient.name) private patientModel: Model<Patient>,
+  ) {}
 
-  async create(createPatientDto: CreatePatientDto): Promise<Patient> {
-    const createdPatient = new this.patientModel(createPatientDto);
+  async addPatientToSpecialist(
+    createPatientDto: CreatePatientDto,
+    specialistId: string | Types.ObjectId,
+  ): Promise<Patient> {
+    const createdPatient = new this.patientModel({
+      ...createPatientDto,
+      specialistId: new Types.ObjectId(specialistId),
+    });
     return createdPatient.save();
   }
 
@@ -26,7 +34,9 @@ export class PatientService {
     return `This action updates a #${id} patient`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} patient`;
+  async remove(id: number) {
+    // return `This action removes a #${id} patient`;
+    await this.patientModel.deleteMany();
+    return 'removed all';
   }
 }
