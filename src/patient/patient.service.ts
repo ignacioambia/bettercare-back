@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Patient } from './patient.schema';
 import { Model, Types } from 'mongoose';
+import { MedicalHistoryDto } from './dto/medical-history.dto';
 
 @Injectable()
 export class PatientService {
@@ -20,6 +21,25 @@ export class PatientService {
       specialistId,
     });
     return createdPatient.save();
+  }
+
+  async setMedicalHistory(
+    medicalHistoryDto: MedicalHistoryDto,
+    patientId: Types.ObjectId,
+  ) {
+    const updatedPatient = await this.patientModel.findByIdAndUpdate(
+      patientId,
+      {
+        $push: {
+          "medicalHistory.pathologicalInherited": { $each : medicalHistoryDto.pathologicalInherited}
+        }
+      },
+      { new: true },
+    );
+
+    if (!updatedPatient) throw new NotFoundException('Patient not found');
+
+    return updatedPatient.medicalHistory;
   }
 
   async getSpecialistPatients(specialistId: Types.ObjectId) {

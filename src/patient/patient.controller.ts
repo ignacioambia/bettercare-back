@@ -14,6 +14,8 @@ import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Request } from 'express';
 import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
+import { Types } from 'mongoose';
+import { MedicalHistoryDto } from './dto/medical-history.dto';
 
 @Controller('patient')
 export class PatientController {
@@ -31,8 +33,14 @@ export class PatientController {
   }
 
   @Put('medical-history/:patientId')
-  addMedicalHistory(@Param('patientId', MongoIdPipe) patientId: string){
-    return 'calling adding medical history' + patientId;
+  addMedicalHistory(
+    @Param('patientId', MongoIdPipe) patientId: Types.ObjectId,
+    @Body() medicalHistoryDto: MedicalHistoryDto,
+  ) {
+    return this.patientService.setMedicalHistory(
+      medicalHistoryDto,
+      patientId,
+    );
   }
 
   @Get()

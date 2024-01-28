@@ -1,3 +1,4 @@
+import { MedicalHistory } from './medical-history.schema';
 import { HydratedDocument, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
@@ -28,6 +29,10 @@ export class Patient {
 
   @Prop()
   email: string;
+
+  @Prop()
+  medicalHistory: MedicalHistory;
+
 }
 
 export const PatientSchema = SchemaFactory.createForClass(Patient);
