@@ -37,10 +37,7 @@ export class PatientController {
     @Param('patientId', MongoIdPipe) patientId: Types.ObjectId,
     @Body() medicalHistoryDto: MedicalHistoryDto,
   ) {
-    return this.patientService.setMedicalHistory(
-      medicalHistoryDto,
-      patientId,
-    );
+    return this.patientService.setMedicalHistory(medicalHistoryDto, patientId);
   }
 
   @Get()
