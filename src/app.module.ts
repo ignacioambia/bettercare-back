@@ -6,7 +6,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { SpecialistModule } from './specialist/specialist.module';
 import { ConfigModule } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -19,10 +18,6 @@ import { APP_PIPE } from '@nestjs/core';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_PIPE,
-      useClass: ValidationPipe,
-    },
   ],
 })
 export class AppModule {}
