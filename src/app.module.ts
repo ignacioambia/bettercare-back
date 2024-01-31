@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { SpecialistModule } from './specialist/specialist.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
+import { AppointmentModule } from './appointment/appointment.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { APP_PIPE } from '@nestjs/core';
     AuthModule,
     PatientModule,
     SpecialistModule,
+    AppointmentModule,
   ],
   controllers: [AppController],
   providers: [
