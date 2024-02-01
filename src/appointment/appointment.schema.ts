@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
+import { VitalSignsDto } from "./dto/vital-signs.dto";
 
 export type AppointmentDocument = HydratedDocument<Appointment>;
 
@@ -21,7 +22,7 @@ export class Appointment {
  condition: string;
  
  @Prop()
- vitalSigns: string;
+ vitalSigns: VitalSignsDto;
 
  @Prop()
  diagnois: string

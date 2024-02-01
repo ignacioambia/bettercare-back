@@ -1,7 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { VitalSignsDto } from './dto/vital-signs.dto';
+import { Types } from 'mongoose';
+import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
 
 @Controller('appointment')
 export class AppointmentController {
@@ -10,6 +13,14 @@ export class AppointmentController {
   @Post()
   create(@Body() createAppointmentDto: CreateAppointmentDto) {
     return this.appointmentService.create(createAppointmentDto);
+  }
+
+  @Put('vital-signs/:appointmentId')
+  setVitalSigns(
+    @Param('appointmentId', MongoIdPipe) appointmentId: Types.ObjectId,
+    @Body() vitalSignsDto: VitalSignsDto,
+  ) {
+    return this.appointmentService.setVitalSigns(vitalSignsDto, appointmentId);
   }
 
   @Get()
@@ -23,7 +34,10 @@ export class AppointmentController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAppointmentDto: UpdateAppointmentDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAppointmentDto: UpdateAppointmentDto,
+  ) {
     return this.appointmentService.update(+id, updateAppointmentDto);
   }
 
