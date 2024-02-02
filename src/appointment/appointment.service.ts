@@ -13,12 +13,15 @@ import { PrescriptionDto } from './dto/prescription.dto';
 export class AppointmentService {
   constructor(
     @InjectModel(Patient.name) private patientModel: Model<Patient>,
-    @InjectModel(Appointment.name) private appointmentModel: Model<Appointment>
+    @InjectModel(Appointment.name) private appointmentModel: Model<Appointment>,
   ) {}
 
   async create(createAppointmentDto: CreateAppointmentDto) {
-    const patient = await this.patientModel.findById(createAppointmentDto.patientId);
-    if(!patient){
+    createAppointmentDto.patientId = new Types.ObjectId(createAppointmentDto.patientId)
+    const patient = await this.patientModel.findById(
+      createAppointmentDto.patientId,
+    );
+    if (!patient) {
       throw new BadRequestException('Patient was not found');
     }
 
@@ -26,32 +29,35 @@ export class AppointmentService {
     return createdAppointment.save();
   }
 
-  async setVitalSigns(vitalSignsDto: VitalSignsDto, appointmentId: Types.ObjectId){
+  async setVitalSigns(
+    vitalSignsDto: VitalSignsDto,
+    appointmentId: Types.ObjectId,
+  ) {
     const updatedAppointment = await this.appointmentModel.findByIdAndUpdate(
       appointmentId,
-      {$set: dot({ vitalSigns: vitalSignsDto })},
-      { new: true }
+      { $set: dot({ vitalSigns: vitalSignsDto }) },
+      { new: true },
     );
 
-    if(!updatedAppointment){
+    if (!updatedAppointment) {
       throw new NotFoundException('Appointment was not found...');
     }
 
     return updatedAppointment;
   }
 
-  async setDiagnosis(diagnosis: string, appointmentId: Types.ObjectId){
+  async setDiagnosis(diagnosis: string, appointmentId: Types.ObjectId) {
     const updatedAppointment = await this.appointmentModel.findByIdAndUpdate(
       appointmentId,
-      {$set: { diagnosis }},
-      {new: true}
+      { $set: { diagnosis } },
+      { new: true },
     );
 
-    if(!updatedAppointment){
+    if (!updatedAppointment) {
       throw new NotFoundException('Appointment was not found...');
     }
 
-    return { message: 'ok'};
+    return { message: 'ok' };
   }
 
   async setPrescription(
@@ -64,11 +70,15 @@ export class AppointmentService {
       { new: true },
     );
 
-    if(!updatedAppointment){
+    if (!updatedAppointment) {
       throw new NotFoundException('Appointment was not found...');
     }
 
     return { message: 'ok' };
+  }
+
+  async getPatientAppointments(patientId: Types.ObjectId) {
+    return this.appointmentModel.find({ patientId });
   }
 
   findAll() {

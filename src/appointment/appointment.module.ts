@@ -12,6 +12,7 @@ import { Appointment, AppointmentSchema } from './appointment.schema';
       { name: Appointment.name, schema: AppointmentSchema },
     ]),
   ],
+  exports: [ AppointmentService],
   controllers: [AppointmentController],
   providers: [AppointmentService],
 })
