@@ -16,10 +16,14 @@ import { Request } from 'express';
 import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
 import { Types } from 'mongoose';
 import { MedicalHistoryDto } from './dto/medical-history.dto';
+import { AppointmentService } from 'src/appointment/appointment.service';
 
 @Controller('patient')
 export class PatientController {
-  constructor(private readonly patientService: PatientService) {}
+  constructor(
+    private readonly patientService: PatientService,
+    private appointmentsService: AppointmentService,
+  ) {}
 
   @Post()
   addPatienToSpecialist(
@@ -38,6 +42,13 @@ export class PatientController {
     @Body() medicalHistoryDto: MedicalHistoryDto,
   ) {
     return this.patientService.setMedicalHistory(medicalHistoryDto, patientId);
+  }
+
+  @Get(':patientId/appointments')
+  getPatientAppointments(
+    @Param('patientId', MongoIdPipe) patientId: Types.ObjectId,
+  ) {
+    return this.appointmentsService.getPatientAppointments(patientId);
   }
 
   @Get()
