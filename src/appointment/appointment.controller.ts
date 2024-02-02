@@ -5,6 +5,7 @@ import { SetDiagnosisDto, UpdateAppointmentDto } from './dto/update-appointment.
 import { VitalSignsDto } from './dto/vital-signs.dto';
 import { Types } from 'mongoose';
 import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
+import { PrescriptionDto } from './dto/prescription.dto';
 
 @Controller('appointment')
 export class AppointmentController {
@@ -26,9 +27,17 @@ export class AppointmentController {
   @Put('diagnosis/:appointmentId')
   setDiagnosis(
     @Param('appointmentId', MongoIdPipe) appointmentId: Types.ObjectId,
-    @Body() {diagnosis}: SetDiagnosisDto,
+    @Body() { diagnosis }: SetDiagnosisDto,
   ) {
-    return this.appointmentService.setDiagnosis(diagnosis, appointmentId)
+    return this.appointmentService.setDiagnosis(diagnosis, appointmentId);
+  }
+
+  @Put('prescription/:appointmentId')
+  addElementsToPrescription(
+    @Param('appointmentId', MongoIdPipe) appointmentId: Types.ObjectId,
+    @Body() prescription : PrescriptionDto,
+  ) {
+    return this.appointmentService.setPrescription(prescription, appointmentId);
   }
 
   @Get()

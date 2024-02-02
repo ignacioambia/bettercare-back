@@ -7,6 +7,7 @@ import { Patient } from 'src/patient/patient.schema';
 import { Model, Types } from 'mongoose';
 import { Appointment } from './appointment.schema';
 import { dot } from 'dot-object';
+import { PrescriptionDto } from './dto/prescription.dto';
 
 @Injectable()
 export class AppointmentService {
@@ -51,6 +52,23 @@ export class AppointmentService {
     }
 
     return { message: 'ok'};
+  }
+
+  async setPrescription(
+    { prescription }: PrescriptionDto,
+    appointmentId: Types.ObjectId,
+  ) {
+    const updatedAppointment = await this.appointmentModel.findByIdAndUpdate(
+      appointmentId,
+      { $push: { prescription: { $each: prescription } } },
+      { new: true },
+    );
+
+    if(!updatedAppointment){
+      throw new NotFoundException('Appointment was not found...');
+    }
+
+    return { message: 'ok' };
   }
 
   findAll() {

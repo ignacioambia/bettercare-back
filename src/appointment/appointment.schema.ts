@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
 import { VitalSignsDto } from "./dto/vital-signs.dto";
+import { PrescriptionDto } from "./dto/prescription.dto";
 
 export type AppointmentDocument = HydratedDocument<Appointment>;
 
@@ -27,7 +28,8 @@ export class Appointment {
  @Prop()
  diagnosis: string
 
- prescription: Object
+ @Prop()
+ prescription: PrescriptionDto
 }
 
 export const AppointmentSchema = SchemaFactory.createForClass(Appointment);
