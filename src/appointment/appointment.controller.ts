@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { UpdateAppointmentDto } from './dto/update-appointment.dto';
+import { SetDiagnosisDto, UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { VitalSignsDto } from './dto/vital-signs.dto';
 import { Types } from 'mongoose';
 import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
@@ -21,6 +21,14 @@ export class AppointmentController {
     @Body() vitalSignsDto: VitalSignsDto,
   ) {
     return this.appointmentService.setVitalSigns(vitalSignsDto, appointmentId);
+  }
+
+  @Put('diagnosis/:appointmentId')
+  setDiagnosis(
+    @Param('appointmentId', MongoIdPipe) appointmentId: Types.ObjectId,
+    @Body() {diagnosis}: SetDiagnosisDto,
+  ) {
+    return this.appointmentService.setDiagnosis(diagnosis, appointmentId)
   }
 
   @Get()

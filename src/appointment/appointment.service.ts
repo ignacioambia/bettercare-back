@@ -39,6 +39,20 @@ export class AppointmentService {
     return updatedAppointment;
   }
 
+  async setDiagnosis(diagnosis: string, appointmentId: Types.ObjectId){
+    const updatedAppointment = await this.appointmentModel.findByIdAndUpdate(
+      appointmentId,
+      {$set: { diagnosis }},
+      {new: true}
+    );
+
+    if(!updatedAppointment){
+      throw new NotFoundException('Appointment was not found...');
+    }
+
+    return { message: 'ok'};
+  }
+
   findAll() {
     return `This action returns all appointments`;
   }

@@ -25,7 +25,7 @@ export class Appointment {
  vitalSigns: VitalSignsDto;
 
  @Prop()
- diagnois: string
+ diagnosis: string
 
  prescription: Object
 }
