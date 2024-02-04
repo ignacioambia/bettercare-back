@@ -1,20 +1,59 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Put,
+  Param,
+  Delete,
+  Req,
+} from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { Request } from 'express';
+import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
+import { Types } from 'mongoose';
+import { MedicalHistoryDto } from './dto/medical-history.dto';
+import { AppointmentService } from 'src/appointment/appointment.service';
 
 @Controller('patient')
 export class PatientController {
-  constructor(private readonly patientService: PatientService) {}
+  constructor(
+    private readonly patientService: PatientService,
+    private appointmentsService: AppointmentService,
+  ) {}
 
   @Post()
-  create(@Body() createPatientDto: CreatePatientDto) {
-    return this.patientService.create(createPatientDto);
+  addPatienToSpecialist(
+    @Req() req: Request,
+    @Body() createPatientDto: CreatePatientDto,
+  ) {
+    return this.patientService.addPatientToSpecialist(
+      createPatientDto,
+      req['user'].sub,
+    );
+  }
+
+  @Put('medical-history/:patientId')
+  addMedicalHistory(
+    @Param('patientId', MongoIdPipe) patientId: Types.ObjectId,
+    @Body() medicalHistoryDto: MedicalHistoryDto,
+  ) {
+    return this.patientService.setMedicalHistory(medicalHistoryDto, patientId);
+  }
+
+  @Get(':patientId/appointments')
+  getPatientAppointments(
+    @Param('patientId', MongoIdPipe) patientId: Types.ObjectId,
+  ) {
+    return this.appointmentsService.getPatientAppointments(patientId);
   }
 
   @Get()
-  findAll() {
-    return this.patientService.findAll();
+  getSpecialistPatients(@Req() req: Request) {
+    return this.patientService.getSpecialistPatients(req['user'].sub);
   }
 
   @Get(':id')
